@@ -7,72 +7,74 @@ using Microsoft.Extensions.Logging;
 
 using TodoApi.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace TodoApi.Controllers
 {
     [ApiController]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     public class TodoItemsController : ControllerBase
     {
         
-        private readonly TodoContext _context;
-        public TodoItemsController(TodoContext context)
+        private readonly TodoContext context;
+        private readonly IMapper mapper;
+    
+        public TodoItemsController(TodoContext context, IMapper mapper)
         {
-           _context = context;
+            this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItemDTO todoItemDTO)
+        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(NewTodoItemDTO newTodoItem)
         {
-            var _todoItem = new TodoItem()
-            {
-                Name = todoItemDTO.Name,
-                isComplete = todoItemDTO.isComplete.Value,
-            };
-            _context.TodoItems.Add(_todoItem);
-            await _context.SaveChangesAsync();
+            TodoItem todoItem = mapper.Map<TodoItem>(newTodoItem);
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTodoItem), new {id = _todoItem.Id}, new TodoItemDTO(_todoItem));
+            return CreatedAtAction(nameof(GetTodoItem), new {id = todoItem.Id}, mapper.Map<TodoItemDTO>(todoItem));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
-            return await _context.TodoItems
-                .Select(t => new TodoItemDTO(t))
-                .ToListAsync();
+            var todoItems = await context.TodoItems.ToListAsync();
+            var todoItemsDTO = mapper.Map<IEnumerable<TodoItem>, IEnumerable<TodoItemDTO>>(todoItems);
+            return Ok(todoItemsDTO);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await context.TodoItems.FindAsync(id);
             if (todoItem == null)
                 return NotFound();
-            return new TodoItemDTO(todoItem);
+            
+            return mapper.Map<TodoItemDTO>(todoItem);
         }
 
         [HttpDelete("{id:long}")]
-        public async Task<ActionResult<TodoItemDTO>> DeleteTodoItem(long id)
+        public async Task<ActionResult> DeleteTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await context.TodoItems.FindAsync(id);
             if (todoItem == null)
                 return NotFound();
 
-            _context.Remove(todoItem);
-            await _context.SaveChangesAsync();
+            context.Remove(todoItem);
+            await context.SaveChangesAsync();
 
             return NoContent();
 
         }
 
         [HttpPut("{id:long}")]
-        public async Task<ActionResult<TodoItemDTO>> PutTodoItem(long id, TodoItemDTO todoItemDTO)
+        public async Task<ActionResult> PutTodoItem(long id, TodoItemDTO todoItemDTO)
         {
             if (id != todoItemDTO.Id)
                 return BadRequest();
 
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await context.TodoItems.FindAsync(id);
 
             if (todoItem == null)
                 return NotFound();
@@ -80,13 +82,11 @@ namespace TodoApi.Controllers
             todoItem.Name = todoItemDTO.Name;
             todoItem.isComplete = todoItemDTO.isComplete.Value;
 
-            _context.TodoItems.Update(todoItem);
-            await _context.SaveChangesAsync();
+            context.TodoItems.Update(todoItem);
+            await context.SaveChangesAsync();
 
             return NoContent();
-        }
-        
+        }  
 
-        
     }
 }

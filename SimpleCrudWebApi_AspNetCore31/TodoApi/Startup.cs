@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TodoApi.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+
 
 namespace TodoApi
 {
@@ -30,6 +32,8 @@ namespace TodoApi
             services.AddControllers();
             services.AddDbContext<TodoContext>(options => options.UseInMemoryDatabase("TodoList"));
             services.AddSwaggerGen();
+            services.AddAutoMapper(typeof(Startup));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
