@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +11,7 @@ using TodoApiWithMediatr.Exceptions;
 namespace TodoApiWithMediatr.Controllers
 {
     [ApiController]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("[controller]")]
     public class TodoItemsController : ControllerBase
     {
@@ -42,6 +41,19 @@ namespace TodoApiWithMediatr.Controllers
             try 
             {
                 return await _mediator.Send(new GetTodoItemByIdQuery(id));
+            }
+            catch (TodoItemNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+        [HttpDelete("{id:long}")]
+        public async Task<ActionResult> DeleteTodoItem(long id)
+        {
+            try
+            {
+                await _mediator.Send(new DeleteTodoItemCommand(id));
+                return NoContent();
             }
             catch (TodoItemNotFoundException)
             {

@@ -23,8 +23,10 @@ namespace TodoApiWithMediatr.Services
         public async Task<GetTodoItemByIdResponse> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
         {
             var todoItem = _mapper.Map<TodoItem>(request);
+
             await _context.TodoItems.AddAsync(todoItem);
             await _context.SaveChangesAsync(cancellationToken);
+            
             return _mapper.Map<GetTodoItemByIdResponse>(todoItem);
         }
     }

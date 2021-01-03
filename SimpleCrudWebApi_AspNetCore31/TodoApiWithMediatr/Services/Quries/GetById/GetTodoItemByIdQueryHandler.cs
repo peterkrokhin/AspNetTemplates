@@ -22,9 +22,9 @@ namespace TodoApiWithMediatr.Services
             _mapper = mapper;
         }
 
-        public async Task<GetTodoItemByIdResponse> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetTodoItemByIdResponse> Handle(GetTodoItemByIdQuery query, CancellationToken cancellationToken)
         {
-            var todoItem = await _context.TodoItems.FindAsync(request.Id);
+            var todoItem = await _context.TodoItems.FindAsync(query.Id);
             if (todoItem == null)
                 throw new TodoItemNotFoundException();
             return _mapper.Map<GetTodoItemByIdResponse>(todoItem);
