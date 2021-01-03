@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-using AutoMapper;
 using MediatR;
 
-using TodoApiWithMediatr.Models;
 using TodoApiWithMediatr.Services;
+using TodoApiWithMediatr.Exceptions;
 
-
-using Microsoft.EntityFrameworkCore;
 
 namespace TodoApiWithMediatr.Controllers
 {
@@ -28,14 +24,29 @@ namespace TodoApiWithMediatr.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetTodoItemsByIdResponse>> Post(CreateTodoItemCommand command)
+        public async Task<ActionResult<GetTodoItemByIdResponse>> PostTodoItem(CreateTodoItemCommand command)
         {
             var todoItem = await _mediator.Send(command);
-            return CreatedAtAction(nameof(Get), new {id = todoItem.Id}, todoItem);
+            return CreatedAtAction(nameof(GetTodoItem), new {id = todoItem.Id}, todoItem);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetAllTodoItemsResponse>>> Get() =>
-            Ok(await _mediator.Send(new GetAllTodoItemsQuery()));
+        public async Task<ActionResult<IEnumerable<GetAllTodoItemsResponse>>> GetTodoItems()
+        {
+            return Ok(await _mediator.Send(new GetAllTodoItemsQuery()));
+        }
+
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<GetTodoItemByIdResponse>> GetTodoItem(long id)
+        {
+            try 
+            {
+                return await _mediator.Send(new GetTodoItemByIdQuery(id));
+            }
+            catch (TodoItemNotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

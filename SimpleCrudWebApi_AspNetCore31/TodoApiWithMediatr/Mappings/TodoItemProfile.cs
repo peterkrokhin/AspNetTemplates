@@ -8,7 +8,7 @@ namespace TodoApiWithMediatr.Mappings
     {
         public TodoItemProfile()
         {
-            CreateMap<TodoItem, GetTodoItemsByIdResponse>();
+            CreateMap<TodoItem, GetTodoItemByIdResponse>();
             CreateMap<TodoItem, GetAllTodoItemsResponse>();
             CreateMap<CreateTodoItemCommand, TodoItem>();
         }

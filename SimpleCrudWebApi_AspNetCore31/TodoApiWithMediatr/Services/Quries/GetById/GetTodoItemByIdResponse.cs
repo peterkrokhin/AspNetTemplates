@@ -1,6 +1,6 @@
 namespace TodoApiWithMediatr.Services
 {
-    public class GetTodoItemsByIdResponse
+    public class GetTodoItemByIdResponse
     {
         public long Id { get; set; }
         public string Name { get; set; }
