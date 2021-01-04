@@ -16,7 +16,6 @@ namespace TodoApi.Controllers
     [Route("api/[controller]")]
     public class TodoItemsController : ControllerBase
     {
-        
         private readonly TodoContext context;
         private readonly IMapper mapper;
     

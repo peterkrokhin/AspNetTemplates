@@ -47,12 +47,30 @@ namespace TodoApiWithMediatr.Controllers
                 return NotFound();
             }
         }
+
         [HttpDelete("{id:long}")]
         public async Task<ActionResult> DeleteTodoItem(long id)
         {
             try
             {
                 await _mediator.Send(new DeleteTodoItemCommand(id));
+                return NoContent();
+            }
+            catch (TodoItemNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult> PutTodoItem(long id, PutTodoItemCommand putTodoItemCommand)
+        {
+            if(id != putTodoItemCommand.Id)
+                return BadRequest();
+
+            try
+            {
+                await _mediator.Send(putTodoItemCommand);
                 return NoContent();
             }
             catch (TodoItemNotFoundException)
