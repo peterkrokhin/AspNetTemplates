@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace TodoApi.Models
 {

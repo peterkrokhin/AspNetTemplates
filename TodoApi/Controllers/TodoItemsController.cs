@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
-using TodoApi.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
@@ -86,6 +85,5 @@ namespace TodoApi.Controllers
 
             return NoContent();
         }  
-
     }
 }
