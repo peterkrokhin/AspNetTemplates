@@ -6,7 +6,7 @@ using MediatR;
 
 using TodoApiWithMediatr.Services;
 using TodoApiWithMediatr.Exceptions;
-
+using FluentValidation.AspNetCore;
 
 namespace TodoApiWithMediatr.Controllers
 {
@@ -25,6 +25,13 @@ namespace TodoApiWithMediatr.Controllers
         [HttpPost]
         public async Task<ActionResult<GetTodoItemByIdResponse>> PostTodoItem(CreateTodoItemCommand command)
         {
+            command.Name = "e";
+            var validator = new CreateTodoItemCommandValidator();
+            var results = validator.Validate(command);
+            results.AddToModelState(ModelState, null);
+            if (!ModelState.IsValid)
+                return Ok(ModelState);
+
             var todoItem = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetTodoItem), new {id = todoItem.Id}, todoItem);
         }

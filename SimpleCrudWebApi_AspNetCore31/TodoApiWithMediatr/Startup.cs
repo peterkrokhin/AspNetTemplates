@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-using Microsoft.EntityFrameworkCore;
-using TodoApiWithMediatr.Models;
 using AutoMapper;
 using MediatR;
+using FluentValidation.AspNetCore;
+
+using TodoApiWithMediatr.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TodoApiWithMediatr
 {
@@ -22,9 +18,14 @@ namespace TodoApiWithMediatr
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(fv => 
+                { 
+                    fv.RegisterValidatorsFromAssemblyContaining<Startup>(); 
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; 
+                });;
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TodoList"));
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c => c.AddFluentValidationRules());
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup));
         }

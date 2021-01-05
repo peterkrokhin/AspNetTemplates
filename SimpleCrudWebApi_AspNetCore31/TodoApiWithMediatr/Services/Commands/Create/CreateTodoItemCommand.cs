@@ -1,6 +1,5 @@
 using MediatR;
 
-
 namespace TodoApiWithMediatr.Services
 {
     public class CreateTodoItemCommand : IRequest<GetTodoItemByIdResponse>

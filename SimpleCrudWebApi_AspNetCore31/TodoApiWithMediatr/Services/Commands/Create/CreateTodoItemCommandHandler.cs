@@ -6,7 +6,6 @@ using MediatR;
 
 using TodoApiWithMediatr.Models;
 
-
 namespace TodoApiWithMediatr.Services
 {
     public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, GetTodoItemByIdResponse>
