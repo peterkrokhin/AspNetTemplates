@@ -1,6 +1,5 @@
 using MediatR;
 
-
 namespace TodoApiWithMediatr.Services
 {
     public class PutTodoItemCommand : IRequest<long>

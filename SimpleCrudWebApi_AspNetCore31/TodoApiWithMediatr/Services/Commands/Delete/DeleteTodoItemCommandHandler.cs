@@ -6,7 +6,6 @@ using MediatR;
 using TodoApiWithMediatr.Exceptions;
 using TodoApiWithMediatr.Models;
 
-
 namespace TodoApiWithMediatr.Services
 {
     class DeleteTodoItemCommandHandler : IRequestHandler<DeleteTodoItemCommand, long>
