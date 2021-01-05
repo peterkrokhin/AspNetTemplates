@@ -7,7 +7,6 @@ using MediatR;
 using TodoApiWithMediatr.Exceptions;
 using TodoApiWithMediatr.Models;
 
-
 namespace TodoApiWithMediatr.Services
 {
     public class GetTodoItemByIdQueryHandler : IRequestHandler<GetTodoItemByIdQuery, GetTodoItemByIdResponse>

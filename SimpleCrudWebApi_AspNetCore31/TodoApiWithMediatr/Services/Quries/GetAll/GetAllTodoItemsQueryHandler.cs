@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 using TodoApiWithMediatr.Models;
 
-
 namespace TodoApiWithMediatr.Services
 {
     public class GetAllTodoItemsQueryHandler : IRequestHandler<GetAllTodoItemsQuery, IEnumerable<GetAllTodoItemsResponse>>
