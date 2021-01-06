@@ -10,4 +10,4 @@
 * AutoMapper;
 * FluentValidation;
 * Swagger;
-* InMemory database.
+* EF Core, InMemory database.
